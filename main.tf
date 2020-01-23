@@ -12,9 +12,6 @@ provider "vsphere" {
   allow_unverified_ssl = true
 }
 
-data "vsphere_datacenter" "uktme-01" {
-}
-
 resource "vsphere_distributed_port_group" "net_1" {
 }
 
