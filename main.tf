@@ -4,8 +4,8 @@ variable vsphere_server {}
 variable vsphere_datacenter {}
 variable vsphere_dvs {}
 variable net_1_name {}
-variable net_1_vlan {}
 variable net_2_name {}
+variable net_1_vlan {}
 variable net_2_vlan {}
 variable aci_private_key {}
 variable aci_cert_name {}
