@@ -95,4 +95,3 @@ resource "aci_application_epg" "epg2" {
   relation_fv_rs_dom_att = [data.aci_vmm_domain.apic_vds.id]
   pref_gr_memb           = "include"
 }
-
