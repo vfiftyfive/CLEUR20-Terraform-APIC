@@ -48,16 +48,6 @@ data "vsphere_distributed_virtual_switch" "legacy-VDS" {
   datacenter_id = data.vsphere_datacenter.uktme-01.id
 }
 
-resource "vsphere_distributed_port_group" "net_1" {
-  name                            = var.net_1_name
-  distributed_virtual_switch_uuid = data.vsphere_distributed_virtual_switch.legacy-VDS.id
-}
-
-resource "vsphere_distributed_port_group" "net_2" {
-  name                            = var.net_2_name
-  distributed_virtual_switch_uuid = data.vsphere_distributed_virtual_switch.legacy-VDS.id
-}
-
 resource "aci_tenant" "terraform_ten" {
   name = var.tenant_name
 }
@@ -134,3 +124,7 @@ data "vsphere_network" "vmm_net_2" {
   datacenter_id = data.vsphere_datacenter.uktme-01.id
 }
 
+resource "aci_subnet" "bd1_subnet" {
+  bridge_domain_dn = aci_bridge_domain.bd1.id
+  ip               = var.bd_subnet
+}
