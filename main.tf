@@ -22,6 +22,7 @@ variable vmm_provider {
 }
 variable net_1_port_id {}
 variable net_2_port_id {}
+variable vsphere_cluster {}
 
 provider "vsphere" {
   user                 = var.vsphere_user
@@ -72,7 +73,7 @@ resource "aci_bridge_domain" "bd1" {
   name               = var.bd_name
 }
 
-resource "aci_application_profile" "app1" {
+resource "aci_application_profile" "my_app" {
   tenant_dn = aci_tenant.terraform_ten.id
   name      = var.anp_name
 }
@@ -83,26 +84,53 @@ data "aci_vmm_domain" "apic_vds" {
 }
 
 resource "aci_application_epg" "net_1" {
-  application_profile_dn = aci_application_profile.app1.id
-  name                   = var.net_1_name
-  relation_fv_rs_bd      = aci_bridge_domain.bd1.name
-  relation_fv_rs_dom_att = [data.aci_vmm_domain.apic_vds.id]
-  pref_gr_memb           = "include"
+  application_profile_dn  = aci_application_profile.my_app.id
+  name                    = var.net_1_name
+  relation_fv_rs_bd       = aci_bridge_domain.bd1.name
+  relation_fv_rs_dom_att  = [data.aci_vmm_domain.apic_vds.id]
+  pref_gr_memb            = "include"
   relation_fv_rs_path_att = ["topology/pod-1/paths-101/pathep-[${var.net_1_port_id}]"]
 }
 
 resource "aci_application_epg" "net_2" {
-  application_profile_dn = aci_application_profile.app1.id
-  name                   = var.net_2_name
-  relation_fv_rs_bd      = aci_bridge_domain.bd1.name
-  relation_fv_rs_dom_att = [data.aci_vmm_domain.apic_vds.id]
-  pref_gr_memb           = "include"
+  application_profile_dn  = aci_application_profile.my_app.id
+  name                    = var.net_2_name
+  relation_fv_rs_bd       = aci_bridge_domain.bd1.name
+  relation_fv_rs_dom_att  = [data.aci_vmm_domain.apic_vds.id]
+  pref_gr_memb            = "include"
   relation_fv_rs_path_att = ["topology/pod-1/paths-101/pathep-[${var.net_2_port_id}]"]
 }
 
+data "vsphere_compute_cluster" "cluster" {
+  name          = var.vsphere_cluster
+  datacenter_id = data.vsphere_datacenter.uktme-01.id
+}
+
 resource "vsphere_virtual_machine" "vmus-1" {
+  name             = "vmus-1"
+  resource_pool_id = data.vsphere_compute_cluster.cluster.resource_pool_id
+  guest_id         = "ubuntu64Guest"
+  network_interface {
+    network_id = data.vsphere_network.vmm_net_1.id
+  }
 }
 
 resource "vsphere_virtual_machine" "vmus-2" {
-  
+  name             = "vmus-2"
+  resource_pool_id = data.vsphere_compute_cluster.cluster.resource_pool_id
+  guest_id         = "ubuntu64Guest"
+  network_interface {
+    network_id = data.vsphere_network.vmm_net_2.id
+  }
 }
+
+data "vsphere_network" "vmm_net_1" {
+  name          = "${format("%v|%v|%v", aci_tenant.terraform_ten.name, aci_application_profile.my_app.name, aci_application_epg.net_1.name)}"
+  datacenter_id = data.vsphere_datacenter.uktme-01.id
+}
+
+data "vsphere_network" "vmm_net_2" {
+  name          = "${format("%v|%v|%v", aci_tenant.terraform_ten.name, aci_application_profile.my_app.name, aci_application_epg.net_2.name)}"
+  datacenter_id = data.vsphere_datacenter.uktme-01.id
+}
+
