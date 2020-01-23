@@ -90,7 +90,7 @@ resource "aci_application_epg" "epg1" {
   name                   = var.net_1_name
   relation_fv_rs_bd      = aci_bridge_domain.bd1.name
   relation_fv_rs_dom_att = [data.aci_vmm_domain.apic_vds.id]
-  relation_fv_rs_cons    = [aci_contract.contract_epg1_epg2.name]
+  pref_gr_memb           = "include"
 }
 
 resource "aci_application_epg" "epg2" {
@@ -98,31 +98,6 @@ resource "aci_application_epg" "epg2" {
   name                   = var.net_2_name
   relation_fv_rs_bd      = aci_bridge_domain.bd1.name
   relation_fv_rs_dom_att = [data.aci_vmm_domain.apic_vds.id]
-  relation_fv_rs_prov    = [aci_contract.contract_epg1_epg2.name]
+  pref_gr_memb           = "include"
 }
 
-resource "aci_contract" "contract_epg1_epg2" {
-  tenant_dn = aci_tenant.terraform_ten.id
-  name      = "Web"
-}
-
-resource "aci_contract_subject" "Web_subject1" {
-  contract_dn                  = aci_contract.contract_epg1_epg2.id
-  name                         = "Subject"
-  relation_vz_rs_subj_filt_att = [aci_filter.allow_https.name]
-}
-
-resource "aci_filter" "allow_https" {
-  tenant_dn = aci_tenant.terraform_ten.id
-  name      = "allow_https"
-}
-
-resource "aci_filter_entry" "https" {
-  name        = "https"
-  filter_dn   = aci_filter.allow_https.id
-  ether_t     = "ip"
-  prot        = "tcp"
-  d_from_port = "https"
-  d_to_port   = "https"
-  stateful    = "yes"
-}
