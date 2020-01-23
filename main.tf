@@ -18,7 +18,7 @@ provider "vsphere" {
 data "vsphere_datacenter" "uktme-01" {
 }
 
-resource "vsphere_distributed_virtual_switch" "legacy-VDS" {
+data "vsphere_distributed_virtual_switch" "legacy-VDS" {
 }
 
 resource "vsphere_distributed_port_group" "net_1" {
