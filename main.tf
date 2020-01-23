@@ -11,8 +11,15 @@ variable aci_private_key {}
 variable aci_cert_name {}
 variable apic_url {}
 variable aci_user {}
+variable bd_name {}
+variable vrf_name {}
+variable tenant_name {}
 variable bd_subnet {}
-variable vmm_domain {}
+variable anp_name {}
+variable apic_vds_name {}
+variable vmm_provider {
+  default = "uni/vmmp-VMware"
+}
 
 provider "vsphere" {
   user                 = var.vsphere_user
@@ -41,28 +48,26 @@ data "vsphere_distributed_virtual_switch" "legacy-VDS" {
 resource "vsphere_distributed_port_group" "net_1" {
   name                            = var.net_1_name
   distributed_virtual_switch_uuid = data.vsphere_distributed_virtual_switch.legacy-VDS.id
-  vlan_id                         = var.net_1_vlan
 }
 
 resource "vsphere_distributed_port_group" "net_2" {
   name                            = var.net_2_name
   distributed_virtual_switch_uuid = data.vsphere_distributed_virtual_switch.legacy-VDS.id
-  vlan_id                         = var.net_2_vlan
 }
 
 resource "aci_tenant" "terraform_ten" {
-  name = "terraform_ten"
+  name = var.tenant_name
 }
 
 resource "aci_vrf" "vrf1" {
   tenant_dn = aci_tenant.terraform_ten.id
-  name      = "vrf1"
+  name      = var.vrf_name
 }
 
 resource "aci_bridge_domain" "bd1" {
   tenant_dn          = aci_tenant.terraform_ten.id
   relation_fv_rs_ctx = aci_vrf.vrf1.name
-  name               = "bd1"
+  name               = var.bd_name
 }
 
 resource "aci_subnet" "bd1_subnet" {
@@ -72,14 +77,19 @@ resource "aci_subnet" "bd1_subnet" {
 
 resource "aci_application_profile" "app1" {
   tenant_dn = aci_tenant.terraform_ten.id
-  name      = "app1"
+  name      = var.anp_name
+}
+
+data "aci_vmm_domain" "apic_vds" {
+  name                = var.apic_vds_name
+  provider_profile_dn = var.vmm_provider
 }
 
 resource "aci_application_epg" "epg1" {
   application_profile_dn = aci_application_profile.app1.id
   name                   = var.net_1_name
   relation_fv_rs_bd      = aci_bridge_domain.bd1.name
-  relation_fv_rs_dom_att = [var.vmm_domain]
+  relation_fv_rs_dom_att = [data.aci_vmm_domain.apic_vds.id]
   relation_fv_rs_cons    = [aci_contract.contract_epg1_epg2.name]
 }
 
@@ -87,7 +97,7 @@ resource "aci_application_epg" "epg2" {
   application_profile_dn = aci_application_profile.app1.id
   name                   = var.net_2_name
   relation_fv_rs_bd      = aci_bridge_domain.bd1.name
-  relation_fv_rs_dom_att = [var.vmm_domain]
+  relation_fv_rs_dom_att = [data.aci_vmm_domain.apic_vds.id]
   relation_fv_rs_prov    = [aci_contract.contract_epg1_epg2.name]
 }
 
