@@ -1,12 +1,7 @@
-# aci_private_key    = "./api_user.pem"
-# aci_cert_name      = "api_user_cert"
-# bd_subnet          = "10.10.0.1/24"
 vsphere_user       = "administrator@vsphere.local"
 vsphere_password   = "C!5co123"
 vsphere_server     = "nvermand-vc-05.uktme.cisco.com"
 vsphere_datacenter = "uktme-01"
-vsphere_dvs        = "legacy-VDS"
 net_1_name         = "net_1"
-net_1_vlan         = "201"
 net_2_name         = "net_2"
-net_2_vlan         = "202"
+
