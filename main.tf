@@ -20,6 +20,8 @@ variable apic_vds_name {}
 variable vmm_provider {
   default = "uni/vmmp-VMware"
 }
+variable net_1_port_id {}
+variable net_2_port_id {}
 
 provider "vsphere" {
   user                 = var.vsphere_user
@@ -80,18 +82,27 @@ data "aci_vmm_domain" "apic_vds" {
   provider_profile_dn = var.vmm_provider
 }
 
-resource "aci_application_epg" "epg1" {
+resource "aci_application_epg" "net_1" {
   application_profile_dn = aci_application_profile.app1.id
   name                   = var.net_1_name
   relation_fv_rs_bd      = aci_bridge_domain.bd1.name
   relation_fv_rs_dom_att = [data.aci_vmm_domain.apic_vds.id]
   pref_gr_memb           = "include"
+  relation_fv_rs_path_att = ["topology/pod-1/paths-101/pathep-[${var.net_1_port_id}]"]
 }
 
-resource "aci_application_epg" "epg2" {
+resource "aci_application_epg" "net_2" {
   application_profile_dn = aci_application_profile.app1.id
   name                   = var.net_2_name
   relation_fv_rs_bd      = aci_bridge_domain.bd1.name
   relation_fv_rs_dom_att = [data.aci_vmm_domain.apic_vds.id]
   pref_gr_memb           = "include"
+  relation_fv_rs_path_att = ["topology/pod-1/paths-101/pathep-[${var.net_2_port_id}]"]
+}
+
+resource "vsphere_virtual_machine" "vmus-1" {
+}
+
+resource "vsphere_virtual_machine" "vmus-2" {
+  
 }
