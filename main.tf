@@ -70,11 +70,6 @@ resource "aci_bridge_domain" "bd1" {
   name               = var.bd_name
 }
 
-resource "aci_subnet" "bd1_subnet" {
-  bridge_domain_dn = aci_bridge_domain.bd1.id
-  ip               = var.bd_subnet
-}
-
 resource "aci_application_profile" "app1" {
   tenant_dn = aci_tenant.terraform_ten.id
   name      = var.anp_name
