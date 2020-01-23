@@ -81,7 +81,7 @@ data "aci_vmm_domain" "apic_vds" {
 }
 
 resource "aci_application_epg" "net_1" {
-  application_profile_dn = aci_application_profile.app1.id
+  application_profile_dn = aci_application_profile.my_app.id
   name                   = var.net_1_name
   relation_fv_rs_bd      = aci_bridge_domain.bd1.name
   relation_fv_rs_dom_att = [data.aci_vmm_domain.apic_vds.id]
@@ -89,7 +89,7 @@ resource "aci_application_epg" "net_1" {
 }
 
 resource "aci_application_epg" "net_2" {
-  application_profile_dn = aci_application_profile.app1.id
+  application_profile_dn = aci_application_profile.my_app.id
   name                   = var.net_2_name
   relation_fv_rs_bd      = aci_bridge_domain.bd1.name
   relation_fv_rs_dom_att = [data.aci_vmm_domain.apic_vds.id]
