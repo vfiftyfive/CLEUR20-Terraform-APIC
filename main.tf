@@ -70,7 +70,7 @@ resource "aci_bridge_domain" "bd1" {
   name               = var.bd_name
 }
 
-resource "aci_application_profile" "app1" {
+resource "aci_application_profile" "my_app" {
   tenant_dn = aci_tenant.terraform_ten.id
   name      = var.anp_name
 }
