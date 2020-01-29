@@ -14,7 +14,8 @@ variable aci_user {}
 variable bd_name {}
 variable vrf_name {}
 variable tenant_name {}
-variable bd_subnet {}
+variable bd1_subnet {}
+variable bd2_subnet {}
 variable anp_name {}
 variable apic_vds_name {}
 variable vmm_provider {
