@@ -13,7 +13,9 @@ provider "vsphere" {
 }
 
 resource "vsphere_distributed_port_group" "net_1" {
+  name = var.net_1_name
 }
 
 resource "vsphere_distributed_port_group" "net_2" {
+  name = var.net_2_name
 }
