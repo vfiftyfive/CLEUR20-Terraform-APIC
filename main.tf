@@ -62,13 +62,13 @@ resource "aci_vrf" "vrf1" {
 resource "aci_bridge_domain" "bd1" {
   tenant_dn          = aci_tenant.terraform_ten.id
   relation_fv_rs_ctx = aci_vrf.vrf1.name
-  name               = var.bd_name
+  name               = var.bd1_name
 }
 
 resource "aci_bridge_domain" "bd2" {
   tenant_dn          = aci_tenant.terraform_ten.id
   relation_fv_rs_ctx = aci_vrf.vrf1.name
-  name               = var.bd_name
+  name               = var.bd2_name
 }
 
 resource "aci_subnet" "net_1_subnet" {
