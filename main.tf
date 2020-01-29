@@ -11,7 +11,8 @@ variable aci_private_key {}
 variable aci_cert_name {}
 variable apic_url {}
 variable aci_user {}
-variable bd_name {}
+variable bd1_name {}
+variable bd2_name {}
 variable vrf_name {}
 variable tenant_name {}
 variable bd1_subnet {}
@@ -84,7 +85,7 @@ resource "aci_subnet" "net_1_subnet" {
 }
 
 resource "aci_subnet" "net_2_subnet" {
-  bridge_domain_dn                    = "${aci_bridge_domain.bd1.id}"
+  bridge_domain_dn                    = "${aci_bridge_domain.bd2.id}"
   ip                                  = var.bd2_subnet
   scope                               = "public"
 }
