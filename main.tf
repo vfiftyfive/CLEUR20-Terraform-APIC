@@ -83,6 +83,18 @@ resource "aci_bridge_domain" "bd2" {
 
 resource "aci_subnet" "net_1_subnet" {
   bridge_domain_dn                    = "${aci_bridge_domain.bd1.id}"
+  ip                                  = "192.168.1.1/24"
+  scope                               = "public"
+}
+
+resource "aci_subnet" "net_2_subnet" {
+  bridge_domain_dn                    = "${aci_bridge_domain.bd1.id}"
+  ip                                  = "192.168.2.1/24"
+  scope                               = "public"
+}
+
+resource "aci_subnet" "net_1_subnet" {
+  bridge_domain_dn                    = "${aci_bridge_domain.bd1.id}"
   ip                                  = var.bd1_subnet
   scope                               = "public"
 }
