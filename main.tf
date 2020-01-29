@@ -70,6 +70,24 @@ resource "aci_bridge_domain" "bd1" {
   name               = var.bd_name
 }
 
+resource "aci_bridge_domain" "bd2" {
+  tenant_dn          = aci_tenant.terraform_ten.id
+  relation_fv_rs_ctx = aci_vrf.vrf1.name
+  name               = var.bd_name
+}
+
+resource "aci_subnet" "net_1_subnet" {
+  bridge_domain_dn                    = "${aci_bridge_domain.bd1.id}"
+  ip                                  = "192.168.1.1/24"
+  scope                               = "public"
+}
+
+resource "aci_subnet" "net_2_subnet" {
+  bridge_domain_dn                    = "${aci_bridge_domain.bd1.id}"
+  ip                                  = "192.168.2.1/24"
+  scope                               = "public"
+}
+
 resource "aci_application_profile" "my_app" {
   tenant_dn = aci_tenant.terraform_ten.id
   name      = var.anp_name
@@ -91,7 +109,7 @@ resource "aci_application_epg" "net_1" {
 resource "aci_application_epg" "net_2" {
   application_profile_dn = aci_application_profile.my_app.id
   name                   = var.net_2_name
-  relation_fv_rs_bd      = aci_bridge_domain.bd1.name
+  relation_fv_rs_bd      = aci_bridge_domain.bd2.name
   relation_fv_rs_dom_att = [data.aci_vmm_domain.apic_vds.id]
   pref_gr_memb           = "include"
 }
