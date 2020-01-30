@@ -120,6 +120,9 @@ resource "vsphere_virtual_machine" "vmus-1" {
   name             = "vmus-1"
   resource_pool_id = data.vsphere_compute_cluster.cluster.resource_pool_id
   guest_id         = "ubuntu64Guest"
+  num_cpus=1
+  memory=1024
+  scsi_type = "pvscsi"
   network_interface {
     network_id = data.vsphere_network.vmm_net_1.id
   }
@@ -129,6 +132,9 @@ resource "vsphere_virtual_machine" "vmus-2" {
   name             = "vmus-2"
   resource_pool_id = data.vsphere_compute_cluster.cluster.resource_pool_id
   guest_id         = "ubuntu64Guest"
+  num_cpus=1
+  memory=1024
+  scsi_type = "pvscsi"
   network_interface {
     network_id = data.vsphere_network.vmm_net_2.id
   }
@@ -143,4 +149,3 @@ data "vsphere_network" "vmm_net_2" {
   name          = "${format("%v|%v|%v", aci_tenant.terraform_ten.name, aci_application_profile.my_app.name, aci_application_epg.net_2.name)}"
   datacenter_id = data.vsphere_datacenter.uktme-01.id
 }
-
