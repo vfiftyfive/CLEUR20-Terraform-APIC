@@ -2,9 +2,9 @@ variable vsphere_user {}
 variable vsphere_password {}
 variable vsphere_server {}
 variable vsphere_datacenter {}
-variable vsphere_dvs {}
 variable net_1_name {}
 variable net_2_name {}
+<<<<<<< HEAD
 variable net_1_vlan {}
 variable net_2_vlan {}
 variable aci_private_key {}
@@ -25,6 +25,8 @@ variable vmm_provider {
 variable net_1_port_id {}
 variable net_2_port_id {}
 variable vsphere_cluster {}
+=======
+>>>>>>> master
 
 provider "vsphere" {
   user                 = var.vsphere_user
@@ -33,6 +35,7 @@ provider "vsphere" {
   allow_unverified_ssl = true
 }
 
+<<<<<<< HEAD
 provider "aci" {
   username    = var.aci_user
   private_key = var.aci_private_key
@@ -181,5 +184,8 @@ data "vsphere_network" "vmm_net_1" {
 data "vsphere_network" "vmm_net_2" {
   name          = "${format("%v|%v|%v", aci_tenant.terraform_ten.name, aci_application_profile.my_app.name, aci_application_epg.net_2.name)}"
   datacenter_id = data.vsphere_datacenter.uktme-01.id
+=======
+resource "vsphere_distributed_port_group" "net_1" {
+>>>>>>> master
 }
 
