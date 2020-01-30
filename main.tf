@@ -149,7 +149,8 @@ resource "vsphere_virtual_machine" "vmus-1" {
     client_device = true
   }
   network_interface {
-    network_id = data.vsphere_network.vmm_net_1.id
+    adapter_type = "e1000"
+    network_id   = data.vsphere_network.vmm_net_1.id
   }
 }
 
@@ -167,7 +168,8 @@ resource "vsphere_virtual_machine" "vmus-2" {
 
   }
   network_interface {
-    network_id = data.vsphere_network.vmm_net_2.id
+    adapter_type = "e1000"
+    network_id   = data.vsphere_network.vmm_net_2.id
   }
 }
 
