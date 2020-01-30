@@ -73,7 +73,7 @@ resource "aci_bridge_domain" "bd2" {
 
 resource "aci_subnet" "net_1_subnet" {
   bridge_domain_dn = aci_bridge_domain.bd1.id
-  ip               = var.bd2_subnet
+  ip               = var.bd1_subnet
   scope            = "public"
 }
 
