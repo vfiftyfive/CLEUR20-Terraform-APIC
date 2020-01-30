@@ -116,7 +116,7 @@ resource "aci_rest" "fv_rs_path_att_net_1" {
   class_name = "fvRsPathAtt"
 
   content = {
-    "dn"   = "${aci_application_epg.net_1.id}/rspathAtt-[topology/pod-1/paths-101/pathep-[${var.net_1_port_id}]]"
+    "dn"    = "${aci_application_epg.net_1.id}/rspathAtt-[topology/pod-1/paths-101/pathep-[${var.net_1_port_id}]]"
     "encap" = "vlan-${var.net_1_vlan}"
   }
 }
@@ -126,7 +126,7 @@ resource "aci_rest" "fv_rs_path_att_net_2" {
   class_name = "fvRsPathAtt"
 
   content = {
-    "dn"   = "${aci_application_epg.net_2.id}1/rspathAtt-[topology/pod-1/paths-101/pathep-[${var.net_2_port_id}]]"
+    "dn"    = "${aci_application_epg.net_2.id}/rspathAtt-[topology/pod-1/paths-101/pathep-[${var.net_2_port_id}]]"
     "encap" = "vlan-${var.net_2_vlan}"
   }
 }
@@ -137,24 +137,35 @@ data "vsphere_compute_cluster" "cluster" {
 }
 
 resource "vsphere_virtual_machine" "vmus-1" {
-  name             = "vmus-1"
-  resource_pool_id = data.vsphere_compute_cluster.cluster.resource_pool_id
-  guest_id         = "ubuntu64Guest"
-  num_cpus=1
-  memory=1024
-  scsi_type = "pvscsi"
+  name                = "vmus-1"
+  resource_pool_id    = data.vsphere_compute_cluster.cluster.resource_pool_id
+  guest_id            = "ubuntu64Guest"
+  num_cpus            = 2
+  memory              = 8192
+  scsi_type           = "lsilogic"
+  enable_logging      = true
+  sync_time_with_host = true
+  cdrom {
+    client_device = true
+  }
   network_interface {
     network_id = data.vsphere_network.vmm_net_1.id
   }
 }
 
 resource "vsphere_virtual_machine" "vmus-2" {
-  name             = "vmus-2"
-  resource_pool_id = data.vsphere_compute_cluster.cluster.resource_pool_id
-  guest_id         = "ubuntu64Guest"
-  num_cpus=1
-  memory=1024
-  scsi_type = "pvscsi"
+  name                = "vmus-2"
+  resource_pool_id    = data.vsphere_compute_cluster.cluster.resource_pool_id
+  guest_id            = "ubuntu64Guest"
+  num_cpus            = 2
+  memory              = 8192
+  scsi_type           = "lsilogic"
+  enable_logging      = true
+  sync_time_with_host = true
+  cdrom {
+    client_device = true
+
+  }
   network_interface {
     network_id = data.vsphere_network.vmm_net_2.id
   }
