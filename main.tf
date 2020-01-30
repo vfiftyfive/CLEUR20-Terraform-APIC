@@ -111,6 +111,26 @@ resource "aci_application_epg" "net_2" {
   relation_fv_rs_path_att = ["topology/pod-1/paths-101/pathep-[${var.net_2_port_id}]"]
 }
 
+resource "aci_rest" "fv_rs_path_att_net_1" {
+  path       = "/api/mo/${aci_application_epg.net_1.id}/rspathAtt-[topology/pod-1/paths-101/pathep-[${var.net_1_port_id}]].json"
+  class_name = "fvRsPathAtt"
+
+  content = {
+    "dn"   = "${aci_application_epg.net_1.id}/rspathAtt-[topology/pod-1/paths-101/pathep-[${var.net_1_port_id}]]"
+    "encap" = "vlan-${var.net_1_vlan}"
+  }
+}
+
+resource "aci_rest" "fv_rs_path_att_net_2" {
+  path       = "/api/mo/${aci_application_epg.net_2.id}/rspathAtt-[topology/pod-1/paths-101/pathep-[${var.net_2_port_id}]].json"
+  class_name = "fvRsPathAtt"
+
+  content = {
+    "dn"   = "${aci_application_epg.net_2.id}1/rspathAtt-[topology/pod-1/paths-101/pathep-[${var.net_2_port_id}]]"
+    "encap" = "vlan-${var.net_2_vlan}"
+  }
+}
+
 data "vsphere_compute_cluster" "cluster" {
   name          = var.vsphere_cluster
   datacenter_id = data.vsphere_datacenter.uktme-01.id
@@ -149,3 +169,4 @@ data "vsphere_network" "vmm_net_2" {
   name          = "${format("%v|%v|%v", aci_tenant.terraform_ten.name, aci_application_profile.my_app.name, aci_application_epg.net_2.name)}"
   datacenter_id = data.vsphere_datacenter.uktme-01.id
 }
+
